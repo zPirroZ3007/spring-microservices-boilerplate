@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-template-service
+  labels:
+    app: app-template-service
+spec:
+  minReadySeconds: 60
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-template-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: app-template-service
+    spec:
+      containers:
+        - name: app
+          imagePullPolicy: Always
+          image: image:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 300m
+              memory: 400Mi
+            limits:
+              cpu: 300m
+              memory: 400Mi
+      imagePullSecrets:
+        - name: registrypullsecret
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: beta.kubernetes.io/arch
+                    operator: In
+                    values:
+                      - arm64
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: app-template-service
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: app-template-service
+  minReplicas: 1
+  maxReplicas: 100
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 15
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 15
+        - type: Pods
+          value: 4
+          periodSeconds: 15
+      selectPolicy: Max
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 90
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 90
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-template-service
+  labels:
+    app: app-template-service
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: my.app
+      http:
+        paths:
+          - path: /api/template
+            pathType: Prefix
+            backend:
+              service:
+                name: app-template-service
+                port:
+                  number: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-template-service
+spec:
+  selector:
+    app: app-template-service
+  ports:
+    - port: 5000
+      targetPort: 8080
+  type: ClusterIP
