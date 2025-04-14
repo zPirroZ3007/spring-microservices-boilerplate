@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    driver-class-name: com.amazonaws.secretsmanager.sql.AWSSecretsManagerMySQLDriver
+    url: jdbc-secretsmanager:mysql://yourdb.eu-south-1.rds.amazonaws.com:3306/db_name
+    username: "credentials"
+springdoc:
+  api-docs:
+    enabled: false
