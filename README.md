@@ -16,7 +16,6 @@ It contains production-grade patterns and tooling, but it is **not a ready-to-ru
 ### 📌 Features
 
 - ✅ **Spring Boot 3.x** with modular microservice structure
-- 🔐 JWT-based authentication with Spring Security
 - 📚 OpenAPI integration with automatic spec generation and client code
 - 🐳 Uses `org.springframework.boot:spring-boot-docker-compose` to spin up development dependencies (like DBs) on the fly using Docker (adjust `compose.yml` as needed)
 - 🧬 jOOQ and Spring Data JPA coexistence
