@@ -3,7 +3,7 @@ import java.nio.file.Paths
 
 plugins {
     java
-    id("org.springframework.boot") version "3.2.5"
+    id("org.springframework.boot") version "3.4.5"
     id("org.springdoc.openapi-gradle-plugin") version "1.8.0"
     id("io.spring.dependency-management") version "1.1.4"
     id("org.openapi.generator") version "7.5.0"
