@@ -48,7 +48,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("io.sentry:sentry-spring-boot-starter-jakarta")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:2.0.2")
+    implementation("com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:2.0.4")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
 
     compileOnly("org.projectlombok:lombok")
